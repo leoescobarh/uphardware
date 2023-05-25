@@ -11,50 +11,39 @@
   <button class="hardware-button" onclick="analizarHardware()">VEAMOS QUÉ PASA</button>
   <div id="resultado"></div>
 
-  <script src="https://unpkg.com/systeminformation/dist/systeminformation.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hardware-info-js@1.1.0/dist/hardware-info.min.js"></script>
   <script>
- function analizarHardware() {
-  // Obtener información del hardware utilizando systeminformation
-  systeminformation.get(function (data) {
-    var placaMadre = data.baseboard && data.baseboard.model;
-    var procesador = data.cpu && data.cpu.manufacturer + ' ' + data.cpu.brand;
-    var discosDuros = data.diskfs.map(function (disk) {
-      return disk.description;
-    });
-    var tarjetaGrafica = data.graphics.controllers.length > 0 && data.graphics.controllers[0].model;
-    var memoriaRAM = data.mem && (data.mem.total / (1024 * 1024 * 1024)).toFixed(2); // en GB
+    function analizarHardware() {
+      HardwareInfo.get().then(function (data) {
+        var placaMadre = data.baseboard && data.baseboard.manufacturer + ' ' + data.baseboard.product;
+        var procesador = data.cpu && data.cpu.manufacturer + ' ' + data.cpu.brand + ' ' + data.cpu.speed;
+        var discosDuros = data.disk && data.disk.map(function (disk) {
+          return disk.name;
+        });
+        var tarjetaGrafica = data.graphics && data.graphics.controller;
+        var memoriaRAM = data.memory && (data.memory.total / (1024 * 1024 * 1024)).toFixed(2);
 
-    // Lógica de recomendación basada en el hardware analizado
-    var recomendacion;
+        var recomendacion;
 
-    // Verificar la cantidad de memoria RAM
-    if (memoriaRAM >= 8) {
-      recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
-    } else {
-      recomendacion = 'MODO NORMAL: Recomendamos agregar más memoria RAM para mejorar el rendimiento en tareas cotidianas.';
+        if (memoriaRAM >= 8) {
+          recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
+        } else {
+          recomendacion = 'MODO NORMAL: Recomendamos agregar más memoria RAM para mejorar el rendimiento en tareas cotidianas.';
+        }
+
+        if (tarjetaGrafica) {
+          recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
+        }
+
+        var resultadoElement = document.getElementById('resultado');
+        resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
+                                     'Procesador: ' + procesador + '<br>' +
+                                     'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
+                                     'Tarjeta Gráfica: ' + tarjetaGrafica + '<br>' +
+                                     'Memoria RAM: ' + memoriaRAM + ' GB<br><br>' +
+                                     'Recomendación: ' + recomendacion;
+      });
     }
-
-    // Verificar si existe una tarjeta gráfica
-    if (tarjetaGrafica) {
-      recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
-    }
-
-    // Verificar el tipo de procesador
-    if (procesador && procesador.includes('Intel')) {
-      recomendacion += ' Además, considera actualizar tu procesador a una versión más reciente para mejorar el rendimiento general.';
-    }
-
-    // Mostrar resultado en la pantalla
-    var resultadoElement = document.getElementById('resultado');
-    resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
-                                 'Procesador: ' + procesador + '<br>' +
-                                 'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
-                                 'Tarjeta Gráfica: ' + tarjetaGrafica + '<br>' +
-                                 'Memoria RAM: ' + memoriaRAM + ' GB<br><br>' +
-                                 'Recomendación: ' + recomendacion;
-  });
-}
-
   </script>
 </body>
 </html>
