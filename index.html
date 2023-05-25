@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .hardware-button {
+      /* Estilos relacionados al hardware */
+    }
+  </style>
+</head>
+<body>
+  <button class="hardware-button" onclick="analizarHardware()">VEAMOS QUÉ PASA</button>
+  <div id="resultado"></div>
+
+  <script src="https://unpkg.com/systeminformation/dist/systeminformation.min.js"></script>
+  <script>
+ function analizarHardware() {
+  // Obtener información del hardware utilizando systeminformation
+  systeminformation.get(function (data) {
+    var placaMadre = data.baseboard && data.baseboard.model;
+    var procesador = data.cpu && data.cpu.manufacturer + ' ' + data.cpu.brand;
+    var discosDuros = data.diskfs.map(function (disk) {
+      return disk.description;
+    });
+    var tarjetaGrafica = data.graphics.controllers.length > 0 && data.graphics.controllers[0].model;
+    var memoriaRAM = data.mem && (data.mem.total / (1024 * 1024 * 1024)).toFixed(2); // en GB
+
+    // Lógica de recomendación basada en el hardware analizado
+    var recomendacion;
+
+    // Verificar la cantidad de memoria RAM
+    if (memoriaRAM >= 8) {
+      recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
+    } else {
+      recomendacion = 'MODO NORMAL: Recomendamos agregar más memoria RAM para mejorar el rendimiento en tareas cotidianas.';
+    }
+
+    // Verificar si existe una tarjeta gráfica
+    if (tarjetaGrafica) {
+      recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
+    }
+
+    // Verificar el tipo de procesador
+    if (procesador && procesador.includes('Intel')) {
+      recomendacion += ' Además, considera actualizar tu procesador a una versión más reciente para mejorar el rendimiento general.';
+    }
+
+    // Mostrar resultado en la pantalla
+    var resultadoElement = document.getElementById('resultado');
+    resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
+                                 'Procesador: ' + procesador + '<br>' +
+                                 'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
+                                 'Tarjeta Gráfica: ' + tarjetaGrafica + '<br>' +
+                                 'Memoria RAM: ' + memoriaRAM + ' GB<br><br>' +
+                                 'Recomendación: ' + recomendacion;
+  });
+}
+
+  </script>
+</body>
+</html>
