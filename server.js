@@ -1,27 +1,30 @@
 const http = require('http');
-const cpuinfo = require('node-cpuinfo');
+const si = require('systeminformation');
 
 const server = http.createServer((req, res) => {
   if (req.url === '/api/hardware') {
-    cpuinfo.get().then(info => {
-      const data = {
-        placaMadre: info.baseboard.manufacturer + ' ' + info.baseboard.model,
-        procesador: info.cpu.brand,
-        discosDuros: info.diskLayout.map(disk => disk.name),
-        tarjetaGrafica: info.graphics.controllers.length > 0 ? info.graphics.controllers[0].model : null,
-        memoriaRAM: info.mem.total / (1024 * 1024 * 1024)
+    si.get({
+      baseboard: 'manufacturer,model',
+      cpu: 'brand',
+      disks: 'name',
+      graphics: 'controllers.model',
+      mem: 'total',
+    }).then(data => {
+      const hardwareInfo = {
+        placaMadre: data.baseboard.manufacturer + ' ' + data.baseboard.model,
+        procesador: data.cpu.brand,
+        discosDuros: data.disks.map(disk => disk.name),
+        tarjetaGrafica: data.graphics.controllers.length > 0 ? data.graphics.controllers[0].model : null,
+        memoriaRAM: data.mem.total / (1024 * 1024 * 1024),
       };
 
-      const serializableData = JSON.parse(JSON.stringify(data));
-
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(serializableData));
+      res.end(JSON.stringify(hardwareInfo));
     }).catch(error => {
       res.statusCode = 500;
       res.end('Error al obtener la información del hardware: ' + error.message);
     });
   } else {
-    // Ruta no encontrada
     res.statusCode = 404;
     res.end('Not Found');
   }
