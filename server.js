@@ -19,12 +19,13 @@ const server = http.createServer((req, res) => {
       res.end('Error al obtener la información del hardware: ' + error.message);
     });
   } else {
+    // Ruta no encontrada
     res.statusCode = 404;
     res.end('Not Found');
   }
 });
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
