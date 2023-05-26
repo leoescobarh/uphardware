@@ -11,38 +11,33 @@
   <button class="hardware-button" onclick="analizarHardware()">VEAMOS QUÉ PASA</button>
   <div id="resultado"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/hardware-info-js@1.1.0/dist/hardware-info.min.js"></script>
   <script>
     function analizarHardware() {
-      HardwareInfo.get().then(function (data) {
-        var placaMadre = data.baseboard && data.baseboard.manufacturer + ' ' + data.baseboard.product;
-        var procesador = data.cpu && data.cpu.manufacturer + ' ' + data.cpu.brand + ' ' + data.cpu.speed;
-        var discosDuros = data.disk && data.disk.map(function (disk) {
-          return disk.name;
-        });
-        var tarjetaGrafica = data.graphics && data.graphics.controller;
-        var memoriaRAM = data.memory && (data.memory.total / (1024 * 1024 * 1024)).toFixed(2);
+      var placaMadre = "Información de la placa madre"; // Obtén esta información de forma apropiada
+      var procesador = "Información del procesador"; // Obtén esta información de forma apropiada
+      var discosDuros = ["Disco Duro 1", "Disco Duro 2"]; // Obtén esta información de forma apropiada
+      var tarjetaGrafica = "Información de la tarjeta gráfica"; // Obtén esta información de forma apropiada
+      var memoriaRAM = "Información de la memoria RAM"; // Obtén esta información de forma apropiada
 
-        var recomendacion;
+      var recomendacion;
 
-        if (memoriaRAM >= 8) {
-          recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
-        } else {
-          recomendacion = 'MODO NORMAL: Recomendamos agregar más memoria RAM para mejorar el rendimiento en tareas cotidianas.';
-        }
+      if (memoriaRAM >= 8) {
+        recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
+      } else {
+        recomendacion = 'MODO NORMAL: Recomendamos agregar más memoria RAM para mejorar el rendimiento en tareas cotidianas.';
+      }
 
-        if (tarjetaGrafica) {
-          recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
-        }
+      if (tarjetaGrafica) {
+        recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
+      }
 
-        var resultadoElement = document.getElementById('resultado');
-        resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
-                                     'Procesador: ' + procesador + '<br>' +
-                                     'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
-                                     'Tarjeta Gráfica: ' + tarjetaGrafica + '<br>' +
-                                     'Memoria RAM: ' + memoriaRAM + ' GB<br><br>' +
-                                     'Recomendación: ' + recomendacion;
-      });
+      var resultadoElement = document.getElementById('resultado');
+      resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
+                                   'Procesador: ' + procesador + '<br>' +
+                                   'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
+                                   'Tarjeta Gráfica: ' + tarjetaGrafica + '<br>' +
+                                   'Memoria RAM: ' + memoriaRAM + '<br><br>' +
+                                   'Recomendación: ' + recomendacion;
     }
   </script>
 </body>
