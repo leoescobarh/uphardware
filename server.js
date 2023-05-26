@@ -12,8 +12,10 @@ const server = http.createServer((req, res) => {
         memoriaRAM: info.mem.total / (1024 * 1024 * 1024)
       };
 
-   //   res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(data));
+      const serializableData = JSON.parse(JSON.stringify(data));
+
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(serializableData));
     }).catch(error => {
       res.statusCode = 500;
       res.end('Error al obtener la información del hardware: ' + error.message);
