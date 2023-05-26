@@ -12,7 +12,7 @@ const server = http.createServer((req, res) => {
         memoriaRAM: info.mem.total / (1024 * 1024 * 1024)
       };
 
-      res.setHeader('Content-Type', 'application/json');
+   //   res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(data));
     }).catch(error => {
       res.statusCode = 500;
