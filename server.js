@@ -10,13 +10,14 @@ const server = http.createServer((req, res) => {
       graphics: 'controllers.model',
       mem: 'total',
     }).then(data => {
-      const hardwareInfo = {
-        placaMadre: data.baseboard.manufacturer + ' ' + data.baseboard.model,
-        procesador: data.cpu.brand,
-        discosDuros: data.disks.map(disk => disk.name),
-        tarjetaGrafica: data.graphics.controllers.length > 0 ? data.graphics.controllers[0].model : null,
-        memoriaRAM: data.mem.total / (1024 * 1024 * 1024),
-      };
+  const hardwareInfo = {
+  placaMadre: data.baseboard?.manufacturer + ' ' + data.baseboard?.model,
+  procesador: data.cpu?.brand,
+  discosDuros: data.disks?.map(disk => disk.name),
+  tarjetaGrafica: data.graphics.controllers?.length > 0 ? data.graphics.controllers[0].model : null,
+  memoriaRAM: data.mem?.total / (1024 * 1024 * 1024),
+};
+
 
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(hardwareInfo));
