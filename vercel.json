@@ -1,7 +1,7 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/api/hardware", "dest": "/server.js" },
+    { "src": "/api/hardware", "dest": "/api/hardware.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
