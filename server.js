@@ -19,7 +19,7 @@ const server = http.createServer((req, res) => {
 };
 
 
-      res.setHeader('Content-Type', 'application/json');
+ //     res.setHeader('Content-Type', 'application/json');
       console.log(data)
       res.end(JSON.stringify(hardwareInfo));
     }).catch(error => {
