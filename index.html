@@ -8,18 +8,25 @@
   </style>
 </head>
 <body>
-  <button class="hardware-button" onclick="analizarHardware()">VEAMOS QUÉ PASA</button>
+  <button class="hardware-button" onclick="obtenerInformacion()">VEAMOS QUÉ PASA</button>
   <div id="resultado"></div>
 
   <script>
-    function analizarHardware() {
-      var placaMadre = "Información de la placa madre"; // Obtén esta información de forma apropiada
-      var procesador = "Información del procesador"; // Obtén esta información de forma apropiada
-      var discosDuros = ["Disco Duro 1", "Disco Duro 2"]; // Obtén esta información de forma apropiada
-      var tarjetaGrafica = "Información de la tarjeta gráfica"; // Obtén esta información de forma apropiada
-      var memoriaRAM = "Información de la memoria RAM"; // Obtén esta información de forma apropiada
+    function obtenerInformacion() {
+      fetch('/api/hardware')
+        .then(response => response.json())
+        .then(data => mostrarInformacion(data))
+        .catch(error => console.error('Error al obtener la información del hardware:', error));
+    }
 
-      var recomendacion;
+    function mostrarInformacion(data) {
+      const placaMadre = data.placaMadre;
+      const procesador = data.procesador;
+      const discosDuros = data.discosDuros;
+      const tarjetaGrafica = data.tarjetaGrafica;
+      const memoriaRAM = data.memoriaRAM;
+
+      let recomendacion = '';
 
       if (memoriaRAM >= 8) {
         recomendacion = 'MODO NORMAL: Tu equipo tiene suficiente memoria RAM para un uso cotidiano.';
@@ -31,7 +38,7 @@
         recomendacion += ' En cuanto a juegos, recomendamos actualizar tu tarjeta gráfica para obtener un rendimiento óptimo.';
       }
 
-      var resultadoElement = document.getElementById('resultado');
+      const resultadoElement = document.getElementById('resultado');
       resultadoElement.innerHTML = 'Placa Madre: ' + placaMadre + '<br>' +
                                    'Procesador: ' + procesador + '<br>' +
                                    'Discos Duros: ' + discosDuros.join(', ') + '<br>' +
